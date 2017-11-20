@@ -60,8 +60,10 @@ object Trainer {
 
 
     /** PreProcess categorical columns **/
-    val countryIndexer = new StringIndexer().setInputCol("country2").setOutputCol("country_indexed")
-    val currencyIndexer = new StringIndexer().setInputCol("currency2").setOutputCol("currency_indexed")
+    val countryIndexer = new StringIndexer().setInputCol("country2").setOutputCol("country_indexed").
+      setHandleInvalid("keep")
+    val currencyIndexer = new StringIndexer().setInputCol("currency2").setOutputCol("currency_indexed").
+      setHandleInvalid("keep")
 
     /** VECTOR ASSEMBLER **/
     val vectorAssembler = new VectorAssembler().setInputCols(
