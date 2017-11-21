@@ -3,7 +3,7 @@ package com.sparkProject
 import org.apache.spark.SparkConf
 import org.apache.spark.ml.Pipeline
 import org.apache.spark.ml.classification.LogisticRegression
-import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator
+import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
 import org.apache.spark.ml.feature._
 import org.apache.spark.ml.tuning.{ParamGridBuilder, TrainValidationSplit}
 import org.apache.spark.sql.SparkSession
@@ -98,15 +98,19 @@ object Trainer {
 
     val trainValidationSplit = new TrainValidationSplit().
       setEstimator(pipeline).
-      setEvaluator(new BinaryClassificationEvaluator().setLabelCol("final_status").setRawPredictionCol("raw_predictions")).
-      setEstimatorParamMaps(paramGrid).
+      setEvaluator(
+        new MulticlassClassificationEvaluator().setLabelCol("final_status").setPredictionCol("predictions").
+          setMetricName("f1"))
+      .setEstimatorParamMaps(paramGrid).
       setTrainRatio(0.7)
 
     val model = trainValidationSplit.fit(train)
 
+    /** Show predictions and f1 score **/
     val predictions = model.transform(test)
     predictions.show()
-    val evaluator = new BinaryClassificationEvaluator().setLabelCol("final_status").setRawPredictionCol("raw_predictions")
+    val evaluator = new MulticlassClassificationEvaluator().setLabelCol("final_status").
+      setPredictionCol("predictions").setMetricName("f1")
     println("Evaluation du modèle : " + evaluator.evaluate(predictions))
     predictions.groupBy("final_status", "predictions").count().show()
 
