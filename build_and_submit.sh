@@ -24,4 +24,4 @@ master_ip=""
 if [ -n "$3" ]; then master_ip="--master spark://$3:7077"; fi
 if [ -n "$2" ]; then path_to_spark=$2; fi
 
-$path_to_spark/bin/spark-submit --conf spark.eventLog.enabled=true --conf spark.eventLog.dir="/tmp" --driver-memory 10g --class com.sparkProject.$1 $master_ip target/scala-2.11/*
+$path_to_spark/bin/spark-submit --conf spark.eventLog.enabled=true --conf spark.eventLog.dir="/tmp" --driver-memory 10g --class com.sparkProject.$1 $master_ip target/scala-2.11/TP_ParisTech_2017_2018-assembly-1.0.jar
